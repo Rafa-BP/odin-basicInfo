@@ -1,31 +1,24 @@
-import http from 'node:http';
-import fs from  'node:fs'
+const express = require("express");
+const app = express();
 
-const server = http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'text/html');
-  let path = './'
-  switch (req.url) {
-    case '/':
-      path += 'index.html';
-      break;
-    case '/about':
-      path += 'about.html';
-      break;
-    case '/contact-me':
-      path += 'contact-me.html';
-      break;
-    default:
-      path += '404.html';
-      break;
+const port = 3000;
+
+app.get("/", (req, res) => res.sendFile('/index.html', {root: __dirname}))
+
+app.get("/about", (req, res) => res.sendFile('/about.html', {root: __dirname}))
+
+app.get("/contact-me", (req, res) => res.sendFile('/contact-me.html', {root: __dirname}))
+
+app.get("/contact-me", (req, res) => res.sendFile('/contact-me.html', {root: __dirname}))
+
+app.use((req, res) => res.sendFile('/404.html', {root: __dirname}))
+
+app.listen(port, (error) => {
+  // This is important!
+  // Without this, any startup errors will silently fail
+  // instead of giving you a helpful error message.
+  if (error) {
+    throw error;
   }
-
-
-  fs.readFile(path,(err, data) => {
-    res.write(data);
-    res.end();
-  })
-});
-
-server.listen(8080, 'localhost', () => {
-  console.log("listening");
+  console.log(`My first Express app - listening on port ${port}!`);
 });
